@@ -32,6 +32,7 @@ class AppointmentDetailSerializer(serializers.ModelSerializer):
             'start_time',
             'end_time',
             'status',
+            'type',
             'notes',
             'created_at',
         ]
@@ -41,6 +42,11 @@ class AppointmentDetailSerializer(serializers.ModelSerializer):
 class AppointmentBookSerializer(serializers.Serializer):
     date = serializers.DateField()
     start_time = serializers.TimeField()
+    type = serializers.ChoiceField(
+        choices=[('online', 'أونلاين'), ('in-person', 'حضوري')],
+        default='in-person',
+        required=False,
+    )
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
@@ -53,7 +59,3 @@ class ScheduleSerializer(serializers.ModelSerializer):
 class AvailableSlotSerializer(serializers.Serializer):
     start_time = serializers.TimeField()
     end_time = serializers.TimeField()
-class AppointmentCreateSerializer(serializers.ModelSerializer):  
-    class Meta:
-        model = Appointment
-        fields = ['patient', 'date', 'time', 'type', 'notes', 'start_time', 'end_time']

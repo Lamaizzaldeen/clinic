@@ -1,8 +1,5 @@
 from datetime import timedelta, datetime, date as date_type
 from django.db import IntegrityError
-from django_filters.rest_framework import DjangoFilterBackend
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
@@ -13,12 +10,9 @@ from utils.permissions import IsPatientUser, IsNutritionistUser
 from utils.pagination import StandardPagination
 from .models import Appointment, Schedule
 from .serializers import (
-    AppointmentCreateSerializer,
-    AppointmentCreateSerializer,
     ScheduleSerializer,
     AppointmentBookSerializer,
     AppointmentDetailSerializer,
-    AppointmentBookSerializer
 )
 
 
@@ -98,7 +92,7 @@ class AvailableSlotsView(APIView):
 
 class BookAppointmentView(APIView):
     permission_classes = [IsPatientUser]
-    serializer_class = AppointmentBookSerializer
+
     def post(self, request):
         serializer = AppointmentBookSerializer(data=request.data)
         if not serializer.is_valid():
@@ -150,7 +144,7 @@ class BookAppointmentView(APIView):
             )
 
         from subscriptions.models import Workshop
-        if Workshop.objects.filter( 
+        if Workshop.objects.filter(
             date=target_date,
             time=start_time,
             status__in=['upcoming', 'ongoing'],
@@ -184,7 +178,7 @@ class BookAppointmentView(APIView):
                 start_time=start_time,
                 end_time=end_time,
                 status='pending',
-                type='in-person',
+                type=serializer.validated_data.get('type', 'in-person'),
             )
         except IntegrityError:
             return Response(
@@ -219,18 +213,3 @@ class AppointmentListView(APIView):
         page = paginator.paginate_queryset(appointments, request)
         serializer = AppointmentDetailSerializer(page, many=True)
         return paginator.get_paginated_response(serializer.data)
-class AppointmentDashboardViewSet(viewsets.ModelViewSet):
-     queryset = Appointment.objects.all().order_by('-date', '-time')
-     serializer_class = AppointmentDetailSerializer
-     permission_classes = [IsNutritionistUser]
-     pagination_class = StandardPagination
-     filter_backends = [DjangoFilterBackend]
-     filterset_fields = ['status', 'type', 'date', 'patient']
-     def get_serializer_class(self):
-        if self.action == 'create':
-            return AppointmentCreateSerializer
-        return AppointmentDetailSerializer
-     def perform_create(self, serializer):
-          nutritionist = self.request.user.nutritionist_profile
-          serializer.save(nutritionist=nutritionist)
-          

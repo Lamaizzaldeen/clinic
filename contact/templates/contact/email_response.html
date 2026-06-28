@@ -7,6 +7,7 @@
 </head>
 <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f7f9fa; color: #333333; margin: 0; padding: 20px; direction: rtl; text-align: right;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e1e8ed;">
+
         <!-- Header -->
         <div style="background-color: #06363d; padding: 30px; text-align: center; border-bottom: 5px solid #5bd1d7;">
             <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px;">الرد على استفسارك</h1>
@@ -15,6 +16,7 @@
 
         <!-- Content -->
         <div style="padding: 30px;">
+
             <!-- Greeting -->
             <p style="font-size: 16px; line-height: 1.6; margin-top: 0; color: #333333;">
                 عزيزنا/عزيزتنا <strong>{{ name }}</strong>،
@@ -25,16 +27,16 @@
 
             <!-- Admin's Reply -->
             <div style="background-color: #f0f7f7; border-right: 4px solid #06363d; padding: 20px; border-radius: 4px; margin-bottom: 30px;">
-                <h3 style="color: #06363d; margin-top: 0; margin-bottom: 10px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px;">الرد</h3>
+                <h3 style="color: #06363d; margin-top: 0; margin-bottom: 10px; font-size: 15px; letter-spacing: 0.5px;">الرد</h3>
                 <p style="font-size: 16px; line-height: 1.6; color: #06363d; margin: 0; white-space: pre-wrap;">{{ reply }}</p>
             </div>
 
             <!-- Original Inquiry Details -->
             <div style="border-top: 1px solid #e1e8ed; padding-top: 25px;">
-                <h4 style="color: #7f8c8d; margin-top: 0; margin-bottom: 15px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">تفاصيل الاستفسار الأصلي</h4>
+                <h4 style="color: #7f8c8d; margin-top: 0; margin-bottom: 15px; font-size: 13px; letter-spacing: 0.5px;">تفاصيل الاستفسار الأصلي</h4>
                 <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #555555; direction: rtl; text-align: right;">
                     <tr>
-                        <td style="padding: 6px 0; font-weight: 600; width: 120px; color: #333333;">الاسم:</td>
+                        <td style="padding: 6px 0; font-weight: 600; width: 140px; color: #333333;">الاسم:</td>
                         <td style="padding: 6px 0;">{{ name }}</td>
                     </tr>
                     <tr>
@@ -42,8 +44,8 @@
                         <td style="padding: 6px 0;">{{ email }}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 6px 0; font-weight: 600; color: #333333;">رقم الهاتف:</td>
-                        <td style="padding: 6px 0;">{{ phone }}</td>
+                        <td style="padding: 6px 0; font-weight: 600; color: #333333;">الموضوع:</td>
+                        <td style="padding: 6px 0;">{{ subject_title }}</td>
                     </tr>
                     <tr>
                         <td style="padding: 6px 0; font-weight: 600; color: #333333;">تاريخ الإرسال:</td>
@@ -64,6 +66,7 @@
             <p style="margin: 0 0 5px 0;">تم إرسال هذا البريد الإلكتروني تلقائياً بخصوص الاستفسار الخاص بك.</p>
             <p style="margin: 0;">&copy; 2026 جميع الحقوق محفوظة.</p>
         </div>
+
     </div>
 </body>
 </html>

@@ -7,8 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from utils.permissions import IsPatientUser
 from django.db.models import Count
 
-from .models import Package, Workshop, PatientWorkshop
-from .serializers import PackageSerializer, WorkshopListSerializer, WorkshopSerializer
+from .models import Package, Workshop, PatientWorkshop, WorkshopAttendance
+from .serializers import PackageSerializer, WorkshopListSerializer, WorkshopSerializer, WorkshopAttendanceSerializer
 from utils.pagination import StandardPagination
 
 class PackageViewSet(ModelViewSet):
@@ -71,20 +71,19 @@ class WorkshopViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_permissions(self):
         if self.action == 'register':
-            return [IsPatientUser()]
+            return [AllowAny()]
         return [AllowAny()]
 
     @action(detail=True, methods=['post'])
     def register(self, request, pk=None):
         workshop = self.get_object()
 
-        if not hasattr(request.user, 'patient_profile'):
+        email = request.data.get('email', '').strip()
+        if not email:
             return Response(
-                {'error': 'Only patients can register for workshops'},
-                status=status.HTTP_403_FORBIDDEN
+                {'error': 'البريد الإلكتروني مطلوب'},
+                status=status.HTTP_400_BAD_REQUEST
             )
-
-        patient = request.user.patient_profile
 
         if workshop.is_full:
             return Response(
@@ -92,14 +91,19 @@ class WorkshopViewSet(viewsets.ReadOnlyModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if PatientWorkshop.objects.filter(patient=patient, workshop=workshop).exists():
+        if WorkshopAttendance.objects.filter(email=email, workshop=workshop).exists():
             return Response(
-                {'error': 'Already registered for this workshop'},
+                {'error': 'هذا البريد الإلكتروني مسجّل بالفعل في هذه الورشة'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        PatientWorkshop.objects.create(patient=patient, workshop=workshop)
+        attendance = WorkshopAttendance.objects.create(email=email, workshop=workshop)
+
+        if request.user.is_authenticated and hasattr(request.user, 'patient_profile'):
+            patient = request.user.patient_profile
+            PatientWorkshop.objects.get_or_create(patient=patient, workshop=workshop)
+
         return Response(
-            {'message': 'Successfully registered for the workshop'},
+            WorkshopAttendanceSerializer(attendance).data,
             status=status.HTTP_201_CREATED
         )

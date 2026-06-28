@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Package, Plan, Workshop
+from .models import Package, Plan, Workshop, WorkshopAttendance
 
 class PackageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,3 +76,10 @@ class WorkshopListSerializer(serializers.ModelSerializer):
 
 class WorkshopJoinRequestSerializer(serializers.Serializer):
     workshop = serializers.PrimaryKeyRelatedField(queryset=Workshop.objects.all())
+
+
+class WorkshopAttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkshopAttendance
+        fields = ['id', 'workshop', 'email', 'status', 'created_at']
+        read_only_fields = ['id', 'status', 'created_at']
